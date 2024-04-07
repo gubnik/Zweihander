@@ -1,0 +1,11 @@
+{
+  "item.zweihander.zweihander": "Цвайхандер",
+  "enchantment.zweihander.weight": "Тяжесть",
+  "enchantment.zweihander.weight.desc": "Увеличивает отдачу в зависимости от скорости",
+  "enchantment.zweihander.poise": "Баланс",
+  "enchantment.zweihander.poise.desc": "Увеличивает сопротивление отбрасыванию и твердость брони, получаемые после нанесения удара",
+  "enchantment.zweihander.giant": "Гигантизм",
+  "enchantment.zweihander.giant.desc": "Увеличивает размер и дальность",
+  "enchantment.zweihander.curse_of_chaos": "Проклятье Хаоса",
+  "enchantment.zweihander.curse_of_chaos.desc": "Увеличивает урон, наносимый игрокам,на 25%, но уменьшает остальной наносимый урон на 50%"
+}

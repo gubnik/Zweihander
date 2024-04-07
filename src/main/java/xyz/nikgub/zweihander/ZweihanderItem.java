@@ -48,7 +48,12 @@ public class ZweihanderItem extends Item {
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int tick, boolean b)
     {
         if (!(entity instanceof Player player)) return;
-        if (player.getMainHandItem() != itemStack) return;
+        if (player.getMainHandItem() != itemStack)
+        {
+            CompoundTag tag = itemStack.getOrCreateTag();
+            if (tag.getBoolean("ProperSwing")) tag.putBoolean("ProperSwing", false);
+            return;
+        }
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.getBoolean("ProperSwing")) return;
         if (player.getAttackStrengthScale(0) == 1)
@@ -60,7 +65,7 @@ public class ZweihanderItem extends Item {
     public boolean hurtEnemy(@NotNull ItemStack itemStack, @NotNull LivingEntity target, @NotNull LivingEntity source)
     {
         double mod = Math.abs(target.getDeltaMovement().length() + source.getDeltaMovement().length()) * itemStack.getEnchantmentLevel(Zweihander.WEIGHT.get());
-        target.knockback(0.5 + mod, Math.sin(source.getYRot() * ((float)Math.PI / 180F)), (double)(-Math.cos(source.getYRot() * ((float)Math.PI / 180F))));
+        target.knockback(0.5 + mod, Math.sin(source.getYRot() * ((float)Math.PI / 180F)), -Math.cos(source.getYRot() * ((float)Math.PI / 180F)));
         return false;
     }
 
@@ -81,8 +86,7 @@ public class ZweihanderItem extends Item {
             builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 11D, AttributeModifier.Operation.ADDITION));
             builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.2D, AttributeModifier.Operation.ADDITION));
             builder.put(ForgeMod.ENTITY_REACH.get(),
-                    new AttributeModifier(REACH_UUID, "Weapon modifier",100
-                            , AttributeModifier.Operation.ADDITION));
+                    new AttributeModifier(REACH_UUID, "Weapon modifier", 1 + itemStack.getEnchantmentLevel(Zweihander.GIANT.get()), AttributeModifier.Operation.ADDITION));
             if (itemStack.getOrCreateTag().getBoolean("ProperSwing"))
             {
                 builder.put(Attributes.KNOCKBACK_RESISTANCE,
@@ -93,5 +97,4 @@ public class ZweihanderItem extends Item {
         }
         return builder.build();
     }
-    //(1 + itemStack.getEnchantmentLevel(Zweihander.GIANT.get())) * 2
 }

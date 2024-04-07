@@ -1,7 +1,11 @@
 {
   "item.zweihander.zweihander": "Zweihander",
   "enchantment.zweihander.weight": "Weight",
+  "enchantment.zweihander.weight.desc": "Increases knockback based on speeds of you and what you hit",
   "enchantment.zweihander.poise": "Poise",
+  "enchantment.zweihander.poise.desc": "Increases knockback resistance and armor toughness gained after attacking",
   "enchantment.zweihander.giant": "Giant",
-  "enchantment.zweihander.curse_of_chaos": "Curse of Chaos"
+  "enchantment.zweihander.giant.desc": "Increases weapon's size and reach",
+  "enchantment.zweihander.curse_of_chaos": "Curse of Chaos",
+  "enchantment.zweihander.curse_of_chaos.desc": "Increases damage dealt to players by 25% and decreases damage dealt to other mobs by 50%"
 }
