@@ -27,7 +27,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
-version = '1.0.0-1.20.1'
+version = '1.0.1-1.20.1'
 group = 'xyz.nikgub.zweihander'
 archivesBaseName = 'zweihander'
 
@@ -92,7 +92,17 @@ minecraft {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    ext.refMap = "main.refmap.json"
+}
+
+mixin {
+    //add sourceSets.main, "void_tome.refmap.json"
+    config "zweihander.mixins.json"
+
+    debug.export = true
+}
 
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [

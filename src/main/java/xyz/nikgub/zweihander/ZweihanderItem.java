@@ -35,12 +35,15 @@ public class ZweihanderItem extends Item {
         super(properties.stacksTo(1).defaultDurability(1500));
     }
 
+    @Override
     public boolean isDamageable(ItemStack itemStack)
     { return true; }
 
+    @Override
     public boolean isEnchantable(@NotNull ItemStack itemStack)
     { return true; }
 
+    @Override
     public int getEnchantmentValue(ItemStack itemStack)
     { return 15; }
 
@@ -64,7 +67,7 @@ public class ZweihanderItem extends Item {
 
     public boolean hurtEnemy(@NotNull ItemStack itemStack, @NotNull LivingEntity target, @NotNull LivingEntity source)
     {
-        double mod = Math.abs(target.getDeltaMovement().length() + source.getDeltaMovement().length()) * itemStack.getEnchantmentLevel(Zweihander.WEIGHT.get());
+        double mod = Math.abs(target.getDeltaMovement().length() + source.getDeltaMovement().length()) * itemStack.getEnchantmentLevel(Zweihander.WEIGHT.get()) * 0.35f;
         target.knockback(0.5 + mod, Math.sin(source.getYRot() * ((float)Math.PI / 180F)), -Math.cos(source.getYRot() * ((float)Math.PI / 180F)));
         return false;
     }
