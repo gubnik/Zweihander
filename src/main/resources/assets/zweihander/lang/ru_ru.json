@@ -1,5 +1,9 @@
 {
   "item.zweihander.zweihander": "Цвайхандер",
+  "item.zweihander.fiery_infusion": "Пламенная мазь",
+  "item.zweihander.ice_infusion": "Ледяная мазь",
+  "item.zweihander.silver_infusion": "Серебряная мазь",
+  "item.zweihander.creeper_infusion": "Криперская мазь",
   "enchantment.zweihander.weight": "Тяжесть",
   "enchantment.zweihander.weight.desc": "Увеличивает отдачу в зависимости от скорости",
   "enchantment.zweihander.poise": "Баланс",

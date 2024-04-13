@@ -1,5 +1,9 @@
 {
   "item.zweihander.zweihander": "Zweihander",
+  "item.zweihander.fiery_infusion": "Fiery Infusion",
+  "item.zweihander.ice_infusion": "Ice Infusion",
+  "item.zweihander.silver_infusion": "Silver Infusion",
+  "item.zweihander.creeper_infusion": "Creeper Infusion",
   "enchantment.zweihander.weight": "Weight",
   "enchantment.zweihander.weight.desc": "Increases knockback based on speeds of you and what you hit",
   "enchantment.zweihander.poise": "Poise",
