@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander;
+package xyz.nikgub.zweihander.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -19,6 +19,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
+import xyz.nikgub.zweihander.registries.EnchantmentRegistry;
 
 import java.util.Set;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class ZweihanderItem extends Item {
 
     public boolean hurtEnemy(@NotNull ItemStack itemStack, @NotNull LivingEntity target, @NotNull LivingEntity source)
     {
-        double mod = Math.abs(target.getDeltaMovement().length() + source.getDeltaMovement().length()) * itemStack.getEnchantmentLevel(Zweihander.WEIGHT.get()) * 0.35f;
+        double mod = Math.abs(target.getDeltaMovement().length() + source.getDeltaMovement().length()) * itemStack.getEnchantmentLevel(EnchantmentRegistry.WEIGHT.get()) * 0.35f;
         target.knockback(0.5 + mod, Math.sin(source.getYRot() * ((float)Math.PI / 180F)), -Math.cos(source.getYRot() * ((float)Math.PI / 180F)));
         return false;
     }
@@ -89,13 +90,13 @@ public class ZweihanderItem extends Item {
             builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 11D, AttributeModifier.Operation.ADDITION));
             builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.2D, AttributeModifier.Operation.ADDITION));
             builder.put(ForgeMod.ENTITY_REACH.get(),
-                    new AttributeModifier(REACH_UUID, "Weapon modifier", 1 + itemStack.getEnchantmentLevel(Zweihander.GIANT.get()), AttributeModifier.Operation.ADDITION));
+                    new AttributeModifier(REACH_UUID, "Weapon modifier", 1 + itemStack.getEnchantmentLevel(EnchantmentRegistry.GIANT.get()), AttributeModifier.Operation.ADDITION));
             if (itemStack.getOrCreateTag().getBoolean("ProperSwing"))
             {
                 builder.put(Attributes.KNOCKBACK_RESISTANCE,
-                        new AttributeModifier(KNCOKBACK_RESISTANCE_UUID, "Weapon modifier", 0.6 + itemStack.getEnchantmentLevel(Zweihander.POISE.get()) * 0.1, AttributeModifier.Operation.ADDITION));
+                        new AttributeModifier(KNCOKBACK_RESISTANCE_UUID, "Weapon modifier", 0.6 + itemStack.getEnchantmentLevel(EnchantmentRegistry.POISE.get()) * 0.1, AttributeModifier.Operation.ADDITION));
                 builder.put(Attributes.ARMOR_TOUGHNESS,
-                        new AttributeModifier(TOUGHNESS_UUID, "Weapon modifier", (1 + itemStack.getEnchantmentLevel(Zweihander.POISE.get())) * 5, AttributeModifier.Operation.ADDITION));
+                        new AttributeModifier(TOUGHNESS_UUID, "Weapon modifier", (1 + itemStack.getEnchantmentLevel(EnchantmentRegistry.POISE.get())) * 5, AttributeModifier.Operation.ADDITION));
             }
         }
         return builder.build();
