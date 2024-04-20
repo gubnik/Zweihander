@@ -2,6 +2,8 @@ package xyz.nikgub.zweihander.mob_effect;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class InfusionMobEffect extends MobEffect {
@@ -30,8 +32,19 @@ public class InfusionMobEffect extends MobEffect {
         return itemColors;
     }
 
+    public static void tryEffect (LivingHurtEvent event)
+    {
+        if (!(event.getSource().getDirectEntity() instanceof LivingEntity source)) return;
+        for (MobEffectInstance instance : source.getActiveEffects()) {
+            if (instance.getEffect() instanceof InfusionMobEffect infusionMobEffect) {
+                infusionMobEffect.getInfusionEffect().effect(event);
+            }
+        }
+    }
+
     public record Colors (float r, float g, float b, float a)
-    {};
+    {
+    }
 
     public interface InfusionEffect
     {

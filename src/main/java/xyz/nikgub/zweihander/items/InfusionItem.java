@@ -1,9 +1,11 @@
 package xyz.nikgub.zweihander.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -11,36 +13,61 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import xyz.nikgub.zweihander.mob_effect.InfusionMobEffect;
+import xyz.nikgub.zweihander.registries.ItemRegistry;
 
-import java.util.Collection;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class InfusionItem extends Item {
 
     private final InfusionMobEffect effect;
+    private final Ingredient ingredient;
 
-    public InfusionItem(Properties properties, InfusionMobEffect effect) {
+    public InfusionItem(Properties properties, InfusionMobEffect effect, Ingredient ingredient) {
         super(properties);
         this.effect = effect;
+        this.ingredient = ingredient;
     }
 
     public InfusionMobEffect getEffect() {
         return effect;
     }
 
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public static void makeRecipes ()
+    {
+        final Ingredient base = Ingredient.of(Items.GLOW_INK_SAC);
+        for (Item item : ItemRegistry.ITEMS.getEntries().stream().map(RegistryObject::get).toList())
+        {
+            if (item instanceof InfusionItem infusionItem)
+            {
+                if (infusionItem.ingredient == Ingredient.EMPTY) continue;
+                BrewingRecipeRegistry.addRecipe(base, infusionItem.ingredient, new ItemStack(infusionItem));
+            }
+        }
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
+        list.add(Component.translatable("tooltip.zweihander." + itemStack.getItem()).withStyle(ChatFormatting.DARK_GRAY));
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand)
     {
-        if (hand != InteractionHand.OFF_HAND || player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) return InteractionResultHolder.fail(player.getItemInHand(hand));
+        if (hand != InteractionHand.OFF_HAND || player.getItemInHand(InteractionHand.MAIN_HAND).getMaxStackSize() != 1) return InteractionResultHolder.fail(player.getItemInHand(hand));
         player.startUsingItem(hand);
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
