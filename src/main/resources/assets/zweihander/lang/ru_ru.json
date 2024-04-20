@@ -1,9 +1,28 @@
 {
   "item.zweihander.zweihander": "Цвайхандер",
+
   "item.zweihander.fiery_infusion": "Пламенная мазь",
   "item.zweihander.ice_infusion": "Ледяная мазь",
   "item.zweihander.silver_infusion": "Серебряная мазь",
   "item.zweihander.creeper_infusion": "Криперская мазь",
+  "item.zweihander.midas_infusion": "Мидасова мазь",
+  "item.zweihander.oil_infusion": "Масляная мазь",
+
+  "tooltip.zweihander.fiery_infusion": "Поджигает врагов",
+  "tooltip.zweihander.ice_infusion": "Замораживает врагов",
+  "tooltip.zweihander.silver_infusion": "Усиливает атаки против нежити",
+  "tooltip.zweihander.creeper_infusion": "Взрывает врагов",
+  "tooltip.zweihander.midas_infusion": "Создает опыт из врагов",
+  "tooltip.zweihander.oil_infusion": "Покрывает врагов маслом",
+
+  "effect.zweihander.fiery_infusion": "Пламенная мазь",
+  "effect.zweihander.ice_infusion": "Ледяная мазь",
+  "effect.zweihander.silver_infusion": "Серебряная мазь",
+  "effect.zweihander.creeper_infusion": "Криперская мазь",
+  "effect.zweihander.midas_infusion": "Мидасова мазь",
+  "effect.zweihander.oil_infusion": "Масляная мазь",
+
+  "enchantment.zweihander.repulsion": "Отталкивание",
   "enchantment.zweihander.weight": "Тяжесть",
   "enchantment.zweihander.weight.desc": "Увеличивает отдачу в зависимости от скорости",
   "enchantment.zweihander.poise": "Баланс",

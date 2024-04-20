@@ -1,9 +1,28 @@
 {
   "item.zweihander.zweihander": "Zweihander",
+  
   "item.zweihander.fiery_infusion": "Fiery Infusion",
   "item.zweihander.ice_infusion": "Ice Infusion",
   "item.zweihander.silver_infusion": "Silver Infusion",
   "item.zweihander.creeper_infusion": "Creeper Infusion",
+  "item.zweihander.midas_infusion": "Midas' Infusion",
+  "item.zweihander.oil_infusion": "Oil Infusion",
+
+  "tooltip.zweihander.fiery_infusion": "Ignites enemies",
+  "tooltip.zweihander.ice_infusion": "Freezes enemies",
+  "tooltip.zweihander.silver_infusion": "Empowers attacks against undead",
+  "tooltip.zweihander.creeper_infusion": "Explodes enemies",
+  "tooltip.zweihander.midas_infusion": "Generates XP from attacks",
+  "tooltip.zweihander.oil_infusion": "Covers enemies in oil",
+
+  "effect.zweihander.fiery_infusion": "Fiery Infusion",
+  "effect.zweihander.ice_infusion": "Ice Infusion",
+  "effect.zweihander.silver_infusion": "Silver Infusion",
+  "effect.zweihander.creeper_infusion": "Creeper Infusion",
+  "effect.zweihander.midas_infusion": "Midas' Infusion",
+  "effect.zweihander.oil_infusion": "Oil Infusion",
+  
+  "enchantment.zweihander.repulsion": "Repulsion",
   "enchantment.zweihander.weight": "Weight",
   "enchantment.zweihander.weight.desc": "Increases knockback based on speeds of you and what you hit",
   "enchantment.zweihander.poise": "Poise",
