@@ -63,12 +63,9 @@ a:hover {
 }
 
 div, iframe {
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  background-color: white;
-  border-style: outset;
-  border-width: 2px;
+  width: 240px;
+  height: 300px;
+  margin: auto;
 }
 
 iframe {
