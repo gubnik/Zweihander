@@ -33,7 +33,7 @@ public class ItemRendererMixin {
                         itemStack.getOrCreateTag().getFloat(InfusionMobEffect.GREEN_TAG),
                         itemStack.getOrCreateTag().getFloat(InfusionMobEffect.BLUE_TAG),
                         itemStack.getOrCreateTag().getFloat(InfusionMobEffect.ALPHA_TAG) / 2f
-                        , 255, p_115168_, false);
+                        , 255, p_115168_, true);
             }
             callbackInfo.cancel();
         }

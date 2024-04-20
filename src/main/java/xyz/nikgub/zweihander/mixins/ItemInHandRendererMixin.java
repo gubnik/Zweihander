@@ -6,7 +6,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,7 +47,7 @@ public class ItemInHandRendererMixin {
         ItemStack toRender = itemStack.copy();
         for (MobEffectInstance instance : livingEntity.getActiveEffects())
         {
-            if (instance.getEffect() instanceof InfusionMobEffect infusionMobEffect && toRender.getMaxStackSize() == 1) {
+            if (instance.getEffect() instanceof InfusionMobEffect infusionMobEffect && toRender.getMaxStackSize() == 1 && toRender.getAttributeModifiers(EquipmentSlot.MAINHAND).containsKey(Attributes.ATTACK_DAMAGE)) {
                 toRender.getOrCreateTag().putBoolean(InfusionMobEffect.INFUSION_TAG, true);
                 toRender.getOrCreateTag().putFloat(InfusionMobEffect.RED_TAG, infusionMobEffect.getItemColors().r());
                 toRender.getOrCreateTag().putFloat(InfusionMobEffect.GREEN_TAG, infusionMobEffect.getItemColors().g());
