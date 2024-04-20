@@ -1,0 +1,19 @@
+body {
+  background-color: white;
+}
+
+h1 {
+  color: darkslategray;
+  padding: 22px;
+  margin: 40px;
+  font-family: "Helvetica";
+  text-align: center;
+}
+p {
+  color: dimgray;
+  border: 1px solid black;
+   padding: 22px;
+   margin: 40px;
+   font-family: Helvetica;
+   text-align: center;
+}
