@@ -93,7 +93,7 @@ public class InfusionItem extends Item {
                 livingEntity.removeEffect(infusionMobEffect);
             }
         }
-        livingEntity.addEffect(new MobEffectInstance(effect, 1200, 5));
+        livingEntity.addEffect(new MobEffectInstance(effect, 1200, 0));
         itemStack.shrink(1);
         return itemStack;
     }
