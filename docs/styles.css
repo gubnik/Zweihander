@@ -62,12 +62,30 @@ a:hover {
   #entries { column-count: 2 ;}
 }
 
-div, iframe {
-  width: 240px;
-  height: 300px;
-  margin: auto;
+.reglist {
+  font-size: large ;
+  background-color: #555565;
+  margin: 40px;
 }
 
-iframe {
+.reglist li {
+  color: white;
+  padding: .25em ;
+}
+
+.logo {
   display: block;
+  padding: 20px;
+  width: 20%;
+  min-width: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.worker {
+  display: block;
+  min-height: 300px;
+  min-width: 240px;
+  margin-left: auto;
+  margin-right: auto;
 }
