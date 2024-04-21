@@ -31,5 +31,5 @@ public class ItemRegistry {
             Ingredient.of(Items.EXPERIENCE_BOTTLE)));
 
     public static final RegistryObject<Item> OIL_INFUSION = ITEMS.register("oil_infusion", () -> new InfusionItem(new Item.Properties(), MobEffectRegistry.OIL_INFUSION.get(),
-            Ingredient.EMPTY));
+            Ingredient.of(Items.COAL_BLOCK)));
 }
