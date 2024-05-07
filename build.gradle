@@ -94,14 +94,13 @@ minecraft {
 
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
-    ext.refMap = "main.refmap.json"
 }
 
 mixin {
-    //add sourceSets.main, "void_tome.refmap.json"
+    // add sourceSets.main, "main.refmap.json"
     config "zweihander.mixins.json"
-
-    debug.export = true
+    disableTargetExport = true
+    disableTargetValidator = true
 }
 
 tasks.named('processResources', ProcessResources).configure {
