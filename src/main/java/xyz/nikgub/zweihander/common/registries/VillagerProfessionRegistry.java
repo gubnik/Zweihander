@@ -1,0 +1,37 @@
+package xyz.nikgub.zweihander.common.registries;
+
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import xyz.nikgub.zweihander.Zweihander;
+
+import java.util.Set;
+
+public class VillagerProfessionRegistry {
+    public static DeferredRegister<PoiType> POIS = DeferredRegister.create(ForgeRegistries.POI_TYPES, Zweihander.MOD_ID);
+    public static DeferredRegister<VillagerProfession> PROFESSIONS = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, Zweihander.MOD_ID);
+
+    public static RegistryObject<PoiType> DEMONOLOGIST_POI = POIS.register("demonologist_poi",
+            () -> new PoiType(getBlockStates(Blocks.SKELETON_SKULL, Blocks.SKELETON_WALL_SKULL), 1, 1));
+
+    public static RegistryObject<VillagerProfession> DEMONOLOGIST = PROFESSIONS.register("demonologist",
+            () -> new VillagerProfession("demonologist",
+                    (poiTypeHolder -> poiTypeHolder.get() == DEMONOLOGIST_POI.get()),
+                    (poiTypeHolder -> poiTypeHolder.get() == DEMONOLOGIST_POI.get()),
+                    ImmutableSet.of(),
+                    ImmutableSet.of(),
+                    SoundEvents.VILLAGER_WORK_BUTCHER));
+
+    public static Set<BlockState> getBlockStates(Block... blocks) {
+        ImmutableSet.Builder<BlockState> builder = ImmutableSet.builder();
+        for (Block block : blocks) builder.addAll(ImmutableSet.copyOf(block.getStateDefinition().getPossibleStates()));
+        return builder.build();
+    }
+}
