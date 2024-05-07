@@ -1,0 +1,11 @@
+{
+  "parent": "zweihander:item/musket_melee",
+  "textures": {
+    "1": "zweihander:item/musket",
+    "particle": "zweihander:item/musket_melee"
+  },
+  "overrides": [
+    { "predicate": { "custom_model_data": 0}, "model": "zweihander:item/musket_melee" },
+    { "predicate": { "custom_model_data": 1}, "model": "zweihander:item/musket_loaded" }
+  ]
+}
