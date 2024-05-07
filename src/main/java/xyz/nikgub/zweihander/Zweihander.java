@@ -41,6 +41,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -56,6 +57,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 import xyz.nikgub.zweihander.common.items.InfusionItem;
+import xyz.nikgub.zweihander.common.items.MusketItem;
 import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
 import xyz.nikgub.zweihander.common.mob_effect.OiledMobEffect;
@@ -65,7 +67,9 @@ import xyz.nikgub.zweihander.common.registries.MobEffectRegistry;
 import xyz.nikgub.zweihander.common.registries.VillagerProfessionRegistry;
 import xyz.nikgub.zweihander.datagen.RegistriesDataGeneration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -118,18 +122,26 @@ public class Zweihander
 
     public void creativeTabEvent(final BuildCreativeModeTabContentsEvent event)
     {
-        if (event.getTabKey() == CreativeModeTabs.COMBAT)
-            event.accept(ItemRegistry.ZWEIHANDER);
-        for (RegistryObject<Item> registryObject: ItemRegistry.ITEMS.getEntries())
+        for (Item item : ItemRegistry.ITEMS.getEntries().stream().map(RegistryObject::get).toList())
         {
-            if (registryObject.isPresent() && registryObject.get() instanceof InfusionItem &&
-                    (event.getTabKey() == CreativeModeTabs.COMBAT || event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES))
-                event.accept(registryObject);
+            if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+                if (item instanceof InfusionItem) event.accept(item);
+                if (item instanceof ZweihanderItem) event.accept(item);
+                if (item instanceof MusketItem) event.accept(item);
+            }
+            else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
+            {
+                if (item instanceof InfusionItem) event.accept(item);
+            }
+            else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
+            {
+                event.accept(item);
+            }
         }
     }
 
     @SubscribeEvent
-    public void registerEvent (VillagerTradesEvent event)
+    public void villagerTrades (VillagerTradesEvent event)
     {
         if (event.getType() == VillagerProfessionRegistry.DEMONOLOGIST.get())
         {
@@ -137,6 +149,26 @@ public class Zweihander
                     new ItemStack(Items.EMERALD, 16),
                     new ItemStack(ItemRegistry.ACCURSED_CONTRACT.get()),
                     5, 0, 0
+            )));
+            event.getTrades().get(1).add(((entity, randomSource) -> new MerchantOffer(
+                    new ItemStack(ItemRegistry.UNBOUND_BLOOD.get(), 1),
+                    new ItemStack(ItemRegistry.BLESSED_SILVER_INGOT.get()),
+                    16, 8, 0.02f
+            )));
+            event.getTrades().get(2).add(((entity, randomSource) -> new MerchantOffer(
+                    new ItemStack(ItemRegistry.UNBOUND_BLOOD.get(), 4),
+                    new ItemStack(ItemRegistry.ACCURSED_CONTRACT.get()),
+                    5, 16, 0.02f
+            )));
+            event.getTrades().get(2).add(((entity, randomSource) -> new MerchantOffer(
+                    new ItemStack(ItemRegistry.UNBOUND_BLOOD.get(), 3),
+                    new ItemStack(Items.EXPERIENCE_BOTTLE, 2),
+                    12, 16, 0.025f
+            )));
+            event.getTrades().get(3).add(((entity, randomSource) -> new MerchantOffer(
+                    new ItemStack(ItemRegistry.UNBOUND_BLOOD.get(), 16),
+                    new ItemStack(ItemRegistry.MUSKET.get()),
+                    16, 32, 0.02f
             )));
         }
     }
@@ -196,6 +228,16 @@ public class Zweihander
         public static boolean isDirectDamage (final DamageSource damageSource)
         {
             return !damageSource.is(DamageTypeTags.IS_EXPLOSION) && !damageSource.is(DamageTypeTags.IS_PROJECTILE);
+        }
+
+        public static List<Vec3> launchRay (Vec3 pos, final Vec3 rotations, int iterations, double step)
+        {
+            List<Vec3> ret = new ArrayList<>();
+            for (int i = 0; i < iterations; i++)
+            {
+                ret.add(new Vec3(pos.x + rotations.x * i * step, pos.y + rotations.y * i * step, pos.z + rotations.z * i * step));
+            }
+            return ret;
         }
     }
 
