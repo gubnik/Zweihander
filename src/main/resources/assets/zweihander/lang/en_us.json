@@ -1,6 +1,13 @@
 {
+  "item.zweihander.unbound_blood": "Unbound Blood",
+  "item.zweihander.blessed_silver_ingot": "Blessed Silver Ingot",
+  "item.zweihander.incense": "Incense",
+
+  "item.zweihander.accursed_contract": "Accursed Contract",
+
   "item.zweihander.zweihander": "Zweihander",
-  
+  "item.zweihander.musket": "Musket",
+
   "item.zweihander.fiery_infusion": "Fiery Infusion",
   "item.zweihander.ice_infusion": "Ice Infusion",
   "item.zweihander.silver_infusion": "Silver Infusion",
@@ -21,7 +28,7 @@
   "effect.zweihander.creeper_infusion": "Creeper Infusion",
   "effect.zweihander.midas_infusion": "Midas' Infusion",
   "effect.zweihander.oil_infusion": "Oil Infusion",
-  
+
   "enchantment.zweihander.repulsion": "Repulsion",
   "enchantment.zweihander.weight": "Weight",
   "enchantment.zweihander.weight.desc": "Increases knockback based on speeds of you and what you hit",
