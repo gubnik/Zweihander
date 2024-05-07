@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.mob_effect;
+package xyz.nikgub.zweihander.common.mob_effect;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -11,7 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import xyz.nikgub.zweihander.Zweihander;
-import xyz.nikgub.zweihander.registries.MobEffectRegistry;
+import xyz.nikgub.zweihander.common.registries.MobEffectRegistry;
 
 public class OiledMobEffect extends MobEffect {
     public OiledMobEffect() {

@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.mob_effect;
+package xyz.nikgub.zweihander.common.mob_effect;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

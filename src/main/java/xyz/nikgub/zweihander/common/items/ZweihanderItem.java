@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.items;
+package xyz.nikgub.zweihander.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -19,7 +19,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.NotNull;
-import xyz.nikgub.zweihander.registries.EnchantmentRegistry;
+import xyz.nikgub.zweihander.common.registries.EnchantmentRegistry;
 
 import java.util.Set;
 import java.util.UUID;

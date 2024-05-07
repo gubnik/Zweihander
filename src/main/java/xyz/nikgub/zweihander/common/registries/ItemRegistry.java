@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.registries;
+package xyz.nikgub.zweihander.common.registries;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -7,11 +7,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import xyz.nikgub.zweihander.Zweihander;
-import xyz.nikgub.zweihander.items.InfusionItem;
-import xyz.nikgub.zweihander.items.ZweihanderItem;
+import xyz.nikgub.zweihander.common.items.InfusionItem;
+import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Zweihander.MOD_ID);
+
+    public static final RegistryObject<Item> UNBOUND_BLOOD = ITEMS.register("unbound_blood", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ACCURSED_CONTRACT = ITEMS.register("accursed_contract", () -> new Item(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> ZWEIHANDER = ITEMS.register("zweihander", () -> new ZweihanderItem(new Item.Properties()));
 

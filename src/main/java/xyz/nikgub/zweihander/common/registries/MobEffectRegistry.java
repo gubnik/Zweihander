@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.registries;
+package xyz.nikgub.zweihander.common.registries;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -13,8 +13,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import xyz.nikgub.zweihander.Zweihander;
-import xyz.nikgub.zweihander.mob_effect.InfusionMobEffect;
-import xyz.nikgub.zweihander.mob_effect.OiledMobEffect;
+import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
+import xyz.nikgub.zweihander.common.mob_effect.OiledMobEffect;
 
 public class MobEffectRegistry {
 
@@ -69,7 +69,7 @@ public class MobEffectRegistry {
         if (!(event.getSource().getDirectEntity() instanceof LivingEntity sourceEntity)) return;
         LivingEntity targetEntity = event.getEntity();
         Zweihander.Utils.shortenEffect(sourceEntity, CREEPER_INFUSION.get(), 200);
-        targetEntity.level().explode(event.getSource().getEntity(), targetEntity.getX(), targetEntity.getY() + targetEntity.getBbHeight() / 2, targetEntity.getZ(), 0.1f * event.getAmount(), Level.ExplosionInteraction.NONE);
+        targetEntity.level().explode(event.getSource().getEntity(), targetEntity.getX(), targetEntity.getY(), targetEntity.getZ(), 0.1f * event.getAmount(), Level.ExplosionInteraction.NONE);
     }
 
     private static void midasInfusion (LivingHurtEvent event)

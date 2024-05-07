@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.items;
+package xyz.nikgub.zweihander.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -20,8 +20,8 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
-import xyz.nikgub.zweihander.mob_effect.InfusionMobEffect;
-import xyz.nikgub.zweihander.registries.ItemRegistry;
+import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
+import xyz.nikgub.zweihander.common.registries.ItemRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;

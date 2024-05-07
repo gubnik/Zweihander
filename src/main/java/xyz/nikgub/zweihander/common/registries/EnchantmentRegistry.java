@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.registries;
+package xyz.nikgub.zweihander.common.registries;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import xyz.nikgub.zweihander.Zweihander;
-import xyz.nikgub.zweihander.items.ZweihanderItem;
+import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 
 public class EnchantmentRegistry {
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Zweihander.MOD_ID);
