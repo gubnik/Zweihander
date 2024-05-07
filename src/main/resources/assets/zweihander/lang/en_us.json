@@ -30,5 +30,7 @@
   "enchantment.zweihander.giant": "Giant",
   "enchantment.zweihander.giant.desc": "Increases weapon's size and reach",
   "enchantment.zweihander.curse_of_chaos": "Curse of Chaos",
-  "enchantment.zweihander.curse_of_chaos.desc": "Increases damage dealt to players by 25% and decreases damage dealt to other mobs by 50%"
+  "enchantment.zweihander.curse_of_chaos.desc": "Increases damage dealt to players by 25% and decreases damage dealt to other mobs by 50%",
+
+  "entity.minecraft.villager.zweihander.demonologist": "Demonologist"
 }
