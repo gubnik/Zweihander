@@ -19,8 +19,16 @@
 package xyz.nikgub.zweihander;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.DetectedVersion;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,10 +39,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,13 +55,20 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
-import xyz.nikgub.zweihander.items.InfusionItem;
-import xyz.nikgub.zweihander.items.ZweihanderItem;
-import xyz.nikgub.zweihander.mob_effect.InfusionMobEffect;
-import xyz.nikgub.zweihander.mob_effect.OiledMobEffect;
-import xyz.nikgub.zweihander.registries.EnchantmentRegistry;
-import xyz.nikgub.zweihander.registries.ItemRegistry;
-import xyz.nikgub.zweihander.registries.MobEffectRegistry;
+import xyz.nikgub.zweihander.common.items.InfusionItem;
+import xyz.nikgub.zweihander.common.items.ZweihanderItem;
+import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
+import xyz.nikgub.zweihander.common.mob_effect.OiledMobEffect;
+import xyz.nikgub.zweihander.common.registries.EnchantmentRegistry;
+import xyz.nikgub.zweihander.common.registries.ItemRegistry;
+import xyz.nikgub.zweihander.common.registries.MobEffectRegistry;
+import xyz.nikgub.zweihander.common.registries.VillagerProfessionRegistry;
+import xyz.nikgub.zweihander.datagen.RegistriesDataGeneration;
+
+import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Mod(Zweihander.MOD_ID)
 public class Zweihander
@@ -59,17 +79,41 @@ public class Zweihander
     public Zweihander()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::creativeTabEvent);
         ItemRegistry.ITEMS.register(modEventBus);
         EnchantmentRegistry.ENCHANTMENTS.register(modEventBus);
         MobEffectRegistry.MOB_EFFECTS.register(modEventBus);
+        VillagerProfessionRegistry.POIS.register(modEventBus);
+        VillagerProfessionRegistry.PROFESSIONS.register(modEventBus);
+
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::creativeTabEvent);
+        modEventBus.addListener(this::gatherData);
+
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     public void commonSetup (final FMLCommonSetupEvent event)
     {
-        InfusionItem.makeRecipes();
+        event.enqueueWork(() ->
+        {
+            InfusionItem.makeRecipes();
+        });
+
+    }
+
+    public void gatherData(GatherDataEvent event)
+    {
+        DataGenerator generator = event.getGenerator();
+        PackOutput output = event.getGenerator().getPackOutput();
+        final ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        /**/
+        RegistriesDataGeneration.addProviders(event.includeServer(), generator, output, lookupProvider, existingFileHelper);
+        generator.addProvider(true, new PackMetadataGenerator(output).add(PackMetadataSection.TYPE, new PackMetadataSection(
+                Component.literal("Resources for Zweihander"),
+                DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES),
+                Arrays.stream(PackType.values()).collect(Collectors.toMap(Function.identity(), DetectedVersion.BUILT_IN::getPackVersion)))));
     }
 
     public void creativeTabEvent(final BuildCreativeModeTabContentsEvent event)
@@ -81,6 +125,19 @@ public class Zweihander
             if (registryObject.isPresent() && registryObject.get() instanceof InfusionItem &&
                     (event.getTabKey() == CreativeModeTabs.COMBAT || event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES))
                 event.accept(registryObject);
+        }
+    }
+
+    @SubscribeEvent
+    public void registerEvent (VillagerTradesEvent event)
+    {
+        if (event.getType() == VillagerProfessionRegistry.DEMONOLOGIST.get())
+        {
+            event.getTrades().get(1).add(((entity, randomSource) -> new MerchantOffer(
+                    new ItemStack(Items.EMERALD, 16),
+                    new ItemStack(ItemRegistry.ACCURSED_CONTRACT.get()),
+                    5, 0, 0
+            )));
         }
     }
 
