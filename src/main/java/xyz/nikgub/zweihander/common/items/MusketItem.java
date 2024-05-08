@@ -2,6 +2,8 @@ package xyz.nikgub.zweihander.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +38,7 @@ import java.util.function.Consumer;
 
 public class MusketItem extends Item {
 
-    public static final float DEFAULT_DAMAGE = 16f;
+    public static final float DEFAULT_DAMAGE = 14f;
 
     public MusketItem(Item.Properties properties) {
         super(properties.stacksTo(1));
@@ -112,19 +114,21 @@ public class MusketItem extends Item {
                 ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 4
         );
         Vec3 angles = entity.getLookAngle().add(spread);
-        List<Vec3> ray = Zweihander.Utils.launchRay(entity.getEyePosition(), angles, 500, 0.2);
+        List<Vec3> ray = Zweihander.Utils.launchRay(entity.getEyePosition(), angles, 100, 0.2);
         float damageModifier = 1f;
         if (entity.level() instanceof ServerLevel level)
         {
             for (Vec3 pos : ray)
             {
+                // TODO : doesnt work, needs fixing
+                if (entity.level().getBlockState(new BlockPos((int) pos.x, (int) pos.y, (int) pos.z)).canOcclude()) break;
                 level.sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 1, 0.01, 0, 0.01, 0);
-                for (LivingEntity target : EntityUtils.entityCollector(pos, 0.1, level))
+                for (LivingEntity target : EntityUtils.entityCollector(pos, 0.2, level))
                 {
                     target.hurt(new DamageSource(level.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(DamageTypes.GENERIC), entity), DEFAULT_DAMAGE * damageModifier);
                     target.knockback(0.5 + damageModifier, Math.sin(entity.getYRot() * ((float)Math.PI / 180F)), -Math.cos(entity.getYRot() * ((float)Math.PI / 180F)));
                 }
-                damageModifier -= 0.001f;
+                damageModifier *= 0.98;
             }
         }
         setLoaded(itemStack, false);
