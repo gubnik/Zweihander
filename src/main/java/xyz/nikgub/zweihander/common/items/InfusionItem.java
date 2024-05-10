@@ -7,7 +7,10 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -43,7 +46,7 @@ public class InfusionItem extends Item {
 
     public static void makeRecipes ()
     {
-        final Ingredient base = Ingredient.of(Items.GLOW_INK_SAC);
+        final Ingredient base = Ingredient.of(ItemRegistry.UNBOUND_BLOOD.get());
         for (Item item : ItemRegistry.ITEMS.getEntries().stream().map(RegistryObject::get).toList())
         {
             if (item instanceof InfusionItem infusionItem)
@@ -62,7 +65,7 @@ public class InfusionItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand)
     {
-        if (hand != InteractionHand.OFF_HAND || player.getItemInHand(InteractionHand.MAIN_HAND).getMaxStackSize() != 1) return InteractionResultHolder.fail(player.getItemInHand(hand));
+        if (hand != InteractionHand.OFF_HAND || player.getItemInHand(InteractionHand.MAIN_HAND).getMaxStackSize() != 1 || player.getItemInHand(InteractionHand.MAIN_HAND).getUseDuration() != 0) return InteractionResultHolder.fail(player.getItemInHand(hand));
         player.startUsingItem(hand);
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
