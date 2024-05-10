@@ -1,6 +1,7 @@
 package xyz.nikgub.zweihander.client.item_extensions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
@@ -70,6 +71,8 @@ public class MusketClientExtension implements IClientItemExtensions
 
     private void applyLoadingHandTransforms(PoseStack poseStack, HumanoidArm arm, float v) {
         int i = arm == HumanoidArm.RIGHT ? 1 : -1;
+        poseStack.rotateAround(Axis.ZP.rotationDegrees(120), (float)i * 0.56F, -0.52F + v * -0.6F, -0.72F);
+        poseStack.rotateAround(Axis.YP.rotationDegrees(90), (float)i * 0.56F, -0.52F + v * -0.6F, -0.72F);
         poseStack.translate((float)i * 0.56F, -0.52F + v * -0.6F, -0.72F);
     }
     private void applyLoadedHandTransforms(PoseStack poseStack, HumanoidArm arm, float v) {
