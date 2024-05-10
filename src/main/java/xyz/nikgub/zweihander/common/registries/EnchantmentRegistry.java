@@ -12,12 +12,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import xyz.nikgub.zweihander.Zweihander;
+import xyz.nikgub.zweihander.common.items.MusketItem;
 import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 
 public class EnchantmentRegistry {
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Zweihander.MOD_ID);
 
     public static final EnchantmentCategory ZWEIHANDER_CATEGORY = EnchantmentCategory.create("zweihander", (item -> item instanceof ZweihanderItem));
+    public static final EnchantmentCategory MUSKET_CATEGORY = EnchantmentCategory.create("musket", (item -> item instanceof MusketItem));
     public static final EnchantmentCategory SHIELD_CATEGORY = EnchantmentCategory.create("shield", (item -> item instanceof ShieldItem));
 
     // Shield enchantments
@@ -62,6 +64,16 @@ public class EnchantmentRegistry {
                 { return true; }
                 @Override
                 public boolean isCurse()
+                { return true; }
+            });
+
+    public static final RegistryObject<Enchantment> TROOPER = ENCHANTMENTS.register("trooper",
+            () -> new Enchantment(Enchantment.Rarity.UNCOMMON, MUSKET_CATEGORY, new EquipmentSlot[]{}) {
+                @Override
+                public int getMaxLevel()
+                { return 1; }
+                @Override
+                public boolean isTreasureOnly()
                 { return true; }
             });
 
