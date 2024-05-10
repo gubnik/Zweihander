@@ -258,16 +258,16 @@ public class Zweihander
             else level.playLocalSound(x, y, z, soundEvent, source, volume, pitch, false);
         }
 
-        public static DamageSource makeDamageSource(ResourceKey<DamageType> damageType, @NotNull Level level, @Nullable Entity direct, @Nullable Entity proxy)
+        public static DamageSource makeDamageSource(ResourceKey<DamageType> damageType, @NotNull Level level, @Nullable Entity trueSource, @Nullable Entity proxy)
         {
             Optional<Registry<DamageType>> registry = level.registryAccess().registry(Registries.DAMAGE_TYPE);
             if (registry.isPresent())
                 try {
-                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypeDatagen.MUSKET_SHOT));
+                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypeDatagen.MUSKET_SHOT), trueSource, proxy);
                 }
                 catch (IllegalStateException stateException)
                 {
-                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypes.GENERIC));
+                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypes.GENERIC), trueSource, proxy);
                 }
             else
                 throw new RuntimeException("Unable to locate damage type registry. How?");
