@@ -263,7 +263,7 @@ public class Zweihander
             Optional<Registry<DamageType>> registry = level.registryAccess().registry(Registries.DAMAGE_TYPE);
             if (registry.isPresent())
                 try {
-                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypeDatagen.MUSKET_SHOT), trueSource, proxy);
+                    return new DamageSource(registry.get().getHolderOrThrow(damageType), trueSource, proxy);
                 }
                 catch (IllegalStateException stateException)
                 {
