@@ -20,20 +20,29 @@ package xyz.nikgub.zweihander;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.DetectedVersion;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -41,11 +50,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -55,21 +65,20 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import xyz.nikgub.zweihander.common.items.InfusionItem;
 import xyz.nikgub.zweihander.common.items.MusketItem;
 import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
 import xyz.nikgub.zweihander.common.mob_effect.OiledMobEffect;
-import xyz.nikgub.zweihander.common.registries.EnchantmentRegistry;
-import xyz.nikgub.zweihander.common.registries.ItemRegistry;
-import xyz.nikgub.zweihander.common.registries.MobEffectRegistry;
-import xyz.nikgub.zweihander.common.registries.VillagerProfessionRegistry;
+import xyz.nikgub.zweihander.common.registries.*;
+import xyz.nikgub.zweihander.datagen.DamageTypeDatagen;
 import xyz.nikgub.zweihander.datagen.RegistriesDataGeneration;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -83,6 +92,7 @@ public class Zweihander
     public Zweihander()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        SoundEventRegistry.SOUNDS.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         EnchantmentRegistry.ENCHANTMENTS.register(modEventBus);
         MobEffectRegistry.MOB_EFFECTS.register(modEventBus);
@@ -206,6 +216,18 @@ public class Zweihander
         }
     }
 
+    @SubscribeEvent
+    public static void onKillEffects (LivingDeathEvent event)
+    {
+        DamageSource damageSource = event.getSource();
+        ItemStack hand;
+        if (damageSource.getEntity() instanceof LivingEntity entity && (hand = entity.getMainHandItem()).getItem() instanceof MusketItem && !MusketItem.isLoaded(hand)
+                && hand.getEnchantmentLevel(EnchantmentRegistry.TROOPER.get()) != 0)
+        {
+            MusketItem.setAmmo(hand, ItemRegistry.IRON_MUSKET_BALL.get());
+        }
+    }
+
     public static class Utils
     {
         public static void shortenEffect (final LivingEntity entity, final MobEffect effect, final int tick)
@@ -230,15 +252,51 @@ public class Zweihander
             return !damageSource.is(DamageTypeTags.IS_EXPLOSION) && !damageSource.is(DamageTypeTags.IS_PROJECTILE);
         }
 
-        public static List<Vec3> launchRay (Vec3 pos, final Vec3 rotations, int iterations, double step)
+        public static void playSound (Level level, double x, double y, double z, SoundEvent soundEvent, SoundSource source, float volume, float pitch)
         {
-            List<Vec3> ret = new ArrayList<>();
-            for (int i = 0; i < iterations; i++)
-            {
-                ret.add(new Vec3(pos.x + rotations.x * i * step, pos.y + rotations.y * i * step, pos.z + rotations.z * i * step));
-            }
-            return ret;
+            if (!level.isClientSide()) level.playSound(null, BlockPos.containing(x, y, z), soundEvent, source, volume, pitch);
+            else level.playLocalSound(x, y, z, soundEvent, source, volume, pitch, false);
         }
+
+        public static DamageSource makeDamageSource(ResourceKey<DamageType> damageType, @NotNull Level level, @Nullable Entity direct, @Nullable Entity proxy)
+        {
+            Optional<Registry<DamageType>> registry = level.registryAccess().registry(Registries.DAMAGE_TYPE);
+            if (registry.isPresent())
+                try {
+                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypeDatagen.MUSKET_SHOT));
+                }
+                catch (IllegalStateException stateException)
+                {
+                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypes.GENERIC));
+                }
+            else
+                throw new RuntimeException("Unable to locate damage type registry. How?");
+        }
+
+        //public static List<Vec3> launchRay (final Vec3 pos, final Vec3 rotations, int iterations, double step)
+        //{
+        //    List<Vec3> ret = new ArrayList<>();
+        //    for (int i = 0; i < iterations; i++)
+        //    {
+        //        ret.add(new Vec3(pos.x + rotations.x * i * step, pos.y + rotations.y * i * step, pos.z + rotations.z * i * step));
+        //    }
+        //    return ret;
+        //}
+//
+        //public static Vec3 traceUntil(LivingEntity livingEntity, BiConsumer<Vec3, Level> action, double limit){
+        //    Vec3 lookPos;
+        //    Vec3 initLook = livingEntity.getLookAngle();
+        //    double i = 1.2;
+        //    while(EntityUtils.entityCollector(
+        //            lookPos = new Vec3( livingEntity.getX() + initLook.x * i, livingEntity.getY() + 1.5 + initLook.y * i, livingEntity.getZ() + initLook.z * i)
+        //            , 0.1, livingEntity.level()).isEmpty() &&
+        //            !livingEntity.level().getBlockState(new BlockPos(new Vec3i((int) lookPos.x, (int) lookPos.y, (int) lookPos.z))).canOcclude()
+        //            && i < limit){
+        //        action.accept(lookPos, livingEntity.level());
+        //        i += 0.2;
+        //    }
+        //    return lookPos;
+        //}
     }
 
 }
