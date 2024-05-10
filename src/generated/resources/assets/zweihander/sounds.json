@@ -1,0 +1,16 @@
+{
+  "musket_load": {
+    "replace": true,
+    "sounds": [
+      "zweihander:musket_load"
+    ],
+    "subtitle": "zweihander.subtitle.musket_load"
+  },
+  "musket_shot": {
+    "replace": true,
+    "sounds": [
+      "zweihander:musket_shot"
+    ],
+    "subtitle": "zweihander.subtitle.musket_shot"
+  }
+}
