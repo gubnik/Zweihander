@@ -8,6 +8,9 @@
   "item.zweihander.zweihander": "Zweihander",
   "item.zweihander.musket": "Musket",
 
+  "item.zweihander.iron_musket_ball": "Iron Musket Ball",
+  "item.zweihander.silver_musket_ball": "Silver Musket Ball",
+
   "item.zweihander.fiery_infusion": "Fiery Infusion",
   "item.zweihander.ice_infusion": "Ice Infusion",
   "item.zweihander.silver_infusion": "Silver Infusion",
@@ -21,6 +24,7 @@
   "tooltip.zweihander.creeper_infusion": "Explodes enemies",
   "tooltip.zweihander.midas_infusion": "Generates XP from attacks",
   "tooltip.zweihander.oil_infusion": "Covers enemies in oil",
+  "tooltip.zweihander.musket": "Ammo: ",
 
   "effect.zweihander.fiery_infusion": "Fiery Infusion",
   "effect.zweihander.ice_infusion": "Ice Infusion",
@@ -39,5 +43,8 @@
   "enchantment.zweihander.curse_of_chaos": "Curse of Chaos",
   "enchantment.zweihander.curse_of_chaos.desc": "Increases damage dealt to players by 25% and decreases damage dealt to other mobs by 50%",
 
-  "entity.minecraft.villager.zweihander.demonologist": "Demonologist"
+  "entity.minecraft.villager.zweihander.demonologist": "Demonologist",
+
+  "zweihander.subtitle.musket_shot": "Musket fired",
+  "zweihander.subtitle.musket_load": "Musket loaded"
 }
