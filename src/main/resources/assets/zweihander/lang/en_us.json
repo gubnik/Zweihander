@@ -42,6 +42,15 @@
   "enchantment.zweihander.giant.desc": "Increases weapon's size and reach",
   "enchantment.zweihander.curse_of_chaos": "Curse of Chaos",
   "enchantment.zweihander.curse_of_chaos.desc": "Increases damage dealt to players by 25% and decreases damage dealt to other mobs by 50%",
+  "enchantment.zweihander.trooper": "Trooper",
+  "enchantment.zweihander.trooper.desc": "Melee kills with a musket instantly reload it",
+  "enchantment.zweihander.assault": "Assault",
+  "enchantment.zweihander.assault.desc": "Increases step height and movement speed while sprinting with loaded musket in hand",
+  "enchantment.zweihander.scattershot": "Scattershot",
+  "enchantment.zweihander.scattershot.desc": "Reduces musket's accuracy and damage while making it fire another shot",
+  "enchantment.zweihander.rifling": "Rifling",
+  "enchantment.zweihander.rifling.desc": "Increases musket's range and accuracy, reduces damage. Damage increases with shot's range",
+
 
   "entity.minecraft.villager.zweihander.demonologist": "Demonologist",
 
