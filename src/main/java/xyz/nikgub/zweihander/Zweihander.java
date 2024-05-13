@@ -61,7 +61,9 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
@@ -73,8 +75,7 @@ import xyz.nikgub.zweihander.common.items.ZweihanderItem;
 import xyz.nikgub.zweihander.common.mob_effect.InfusionMobEffect;
 import xyz.nikgub.zweihander.common.mob_effect.OiledMobEffect;
 import xyz.nikgub.zweihander.common.registries.*;
-import xyz.nikgub.zweihander.datagen.DamageTypeDatagen;
-import xyz.nikgub.zweihander.datagen.RegistriesDataGeneration;
+import xyz.nikgub.zweihander.data.RegistriesDataGeneration;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -92,12 +93,14 @@ public class Zweihander
     public Zweihander()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         SoundEventRegistry.SOUNDS.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         EnchantmentRegistry.ENCHANTMENTS.register(modEventBus);
         MobEffectRegistry.MOB_EFFECTS.register(modEventBus);
         VillagerProfessionRegistry.POIS.register(modEventBus);
         VillagerProfessionRegistry.PROFESSIONS.register(modEventBus);
+        ContractRegistry.CONTRACTS.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::creativeTabEvent);
@@ -105,6 +108,7 @@ public class Zweihander
 
         MinecraftForge.EVENT_BUS.register(this);
 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ZweihanderConfig.COMMON);
     }
 
     public void commonSetup (final FMLCommonSetupEvent event)
@@ -217,14 +221,14 @@ public class Zweihander
     }
 
     @SubscribeEvent
-    public static void onKillEffects (LivingDeathEvent event)
+    public void onKillEffects (LivingDeathEvent event)
     {
         DamageSource damageSource = event.getSource();
         ItemStack hand;
         if (damageSource.getEntity() instanceof LivingEntity entity && (hand = entity.getMainHandItem()).getItem() instanceof MusketItem && !MusketItem.isLoaded(hand)
                 && hand.getEnchantmentLevel(EnchantmentRegistry.TROOPER.get()) != 0)
         {
-            MusketItem.setAmmo(hand, ItemRegistry.IRON_MUSKET_BALL.get());
+            MusketItem.reload(entity, hand);
         }
     }
 
