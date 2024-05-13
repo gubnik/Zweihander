@@ -11,6 +11,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import xyz.nikgub.zweihander.Zweihander;
 import xyz.nikgub.zweihander.common.items.MusketItem;
 import xyz.nikgub.zweihander.common.items.ZweihanderItem;
@@ -67,7 +68,41 @@ public class EnchantmentRegistry {
                 { return true; }
             });
 
+    // Musket enchantments
+
+    public static final RegistryObject<Enchantment> SCATTERSHOT = ENCHANTMENTS.register("scattershot",
+            () -> new Enchantment(Enchantment.Rarity.COMMON, MUSKET_CATEGORY, new EquipmentSlot[]{}) {
+                @Override
+                public int getMaxLevel()
+                { return 3; }
+                @Override
+                public boolean checkCompatibility(@NotNull Enchantment enchantment) {
+                    return this != enchantment && enchantment != RIFLING.get();
+                }
+            });
+
+    public static final RegistryObject<Enchantment> RIFLING = ENCHANTMENTS.register("rifling",
+            () -> new Enchantment(Enchantment.Rarity.COMMON, MUSKET_CATEGORY, new EquipmentSlot[]{}) {
+                @Override
+                public int getMaxLevel()
+                { return 3; }
+                @Override
+                public boolean checkCompatibility(@NotNull Enchantment enchantment) {
+                    return this != enchantment && enchantment != SCATTERSHOT.get();
+                }
+            });
+
     public static final RegistryObject<Enchantment> TROOPER = ENCHANTMENTS.register("trooper",
+            () -> new Enchantment(Enchantment.Rarity.UNCOMMON, MUSKET_CATEGORY, new EquipmentSlot[]{}) {
+                @Override
+                public int getMaxLevel()
+                { return 1; }
+                @Override
+                public boolean isTreasureOnly()
+                { return true; }
+            });
+
+    public static final RegistryObject<Enchantment> ASSAULT = ENCHANTMENTS.register("assault",
             () -> new Enchantment(Enchantment.Rarity.UNCOMMON, MUSKET_CATEGORY, new EquipmentSlot[]{}) {
                 @Override
                 public int getMaxLevel()
