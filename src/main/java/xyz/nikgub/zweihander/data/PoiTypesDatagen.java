@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.datagen;
+package xyz.nikgub.zweihander.data;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

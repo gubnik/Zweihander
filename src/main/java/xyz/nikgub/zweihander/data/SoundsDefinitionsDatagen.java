@@ -1,4 +1,4 @@
-package xyz.nikgub.zweihander.datagen;
+package xyz.nikgub.zweihander.data;
 
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
