@@ -152,8 +152,10 @@ public class MusketItem extends Item {
             Map<LivingEntity, Float> toDamage = fireManager(itemStack, entity, ticks);
             for (LivingEntity living : toDamage.keySet())
             {
-                living.hurt(Zweihander.Utils.makeDamageSource(DamageTypeDatagen.MUSKET_SHOT, level, entity, entity), Mth.clamp(toDamage.get(living), 0, DAMAGE_CAP) * effect.getModifier(living));
-                living.knockback(0.75F, Mth.sin(entity.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(entity.getYRot() * ((float) Math.PI / 180F)));
+                final float damageMultiplier = effect.getModifier(entity, living);
+                final float finalDamage = Mth.clamp(toDamage.get(living), 0, DAMAGE_CAP);
+                living.hurt(Zweihander.Utils.makeDamageSource(DamageTypeDatagen.MUSKET_SHOT, level, entity, entity), finalDamage * damageMultiplier);
+                living.knockback(0.5F * damageMultiplier, Mth.sin(entity.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(entity.getYRot() * ((float) Math.PI / 180F)));
             }
             final long currTick = Incandescent.clientTick;
             Incandescent.runShakeFor(1, (player -> Incandescent.clientTick > currTick + 15));
