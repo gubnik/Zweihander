@@ -1,7 +1,9 @@
 package xyz.nikgub.zweihander.common.registries;
 
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -9,6 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import xyz.nikgub.zweihander.Zweihander;
+import xyz.nikgub.zweihander.common.entities.FlamingGuillotineEntity;
 import xyz.nikgub.zweihander.common.items.*;
 
 public class ItemRegistry {
@@ -23,9 +26,23 @@ public class ItemRegistry {
     public static final RegistryObject<ZweihanderItem> ZWEIHANDER = ITEMS.register("zweihander", () -> new ZweihanderItem(new Item.Properties()));
 
     public static final RegistryObject<MusketItem> MUSKET = ITEMS.register("musket", () -> new MusketItem(new Item.Properties()));
-    public static final RegistryObject<MusketAmmunitionItem> IRON_MUSKET_BALL = ITEMS.register("iron_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (entity) -> {return 1f;}));
-    public static final RegistryObject<MusketAmmunitionItem> SILVER_MUSKET_BALL = ITEMS.register("silver_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (entity) -> {
-        if (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD) return 1.5f; else return 1;
+
+    public static final RegistryObject<MusketAmmunitionItem> IRON_MUSKET_BALL = ITEMS.register("iron_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) -> 1f));
+
+    public static final RegistryObject<MusketAmmunitionItem> SILVER_MUSKET_BALL = ITEMS.register("silver_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) -> {
+        if (entity.getMobType() == MobType.UNDEAD) return 1.2f; else return 0.8f;
+    }));
+
+    public static final RegistryObject<MusketAmmunitionItem> INQUISITORIAL_MUSKET_BALL = ITEMS.register("inquisitorial_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) ->
+    {
+        if (!(entity.level() instanceof ServerLevel level)) return 0.5f;
+        FlamingGuillotineEntity guillotine = FlamingGuillotineEntity.createWithDamage(EntityTypeRegistry.FLAMING_GUILLOTINE.get(), level, (float) source.getAttributeValue(Attributes.ATTACK_DAMAGE) / 2);
+        if (source instanceof Player player) guillotine.setPlayerUuid(player.getUUID());
+        guillotine.setSize(entity.getBbWidth() / 0.6f);
+        guillotine.moveTo(entity.position());
+        guillotine.setYRot(source.getYRot());
+        level.addFreshEntity(guillotine);
+        return 0.5f;
     }));
 
     public static final RegistryObject<InfusionItem> FIERY_INFUSION = ITEMS.register("fiery_infusion", () -> new InfusionItem(new Item.Properties(), MobEffectRegistry.FIERY_INFUSION.get(),
