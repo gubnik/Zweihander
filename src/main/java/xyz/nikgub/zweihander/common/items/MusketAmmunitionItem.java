@@ -1,6 +1,7 @@
 package xyz.nikgub.zweihander.common.items;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -40,6 +41,6 @@ public class MusketAmmunitionItem extends Item {
 
     public interface Effect
     {
-        float getModifier (Entity entity);
+        float getModifier (LivingEntity source, LivingEntity entity);
     }
 }
