@@ -20,6 +20,7 @@ package xyz.nikgub.zweihander;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.DetectedVersion;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -51,6 +52,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -69,6 +71,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import xyz.nikgub.zweihander.client.models.FlamingGuillotineModel;
+import xyz.nikgub.zweihander.client.renderers.FlamingGuillotineRenderer;
 import xyz.nikgub.zweihander.common.items.InfusionItem;
 import xyz.nikgub.zweihander.common.items.MusketItem;
 import xyz.nikgub.zweihander.common.items.ZweihanderItem;
@@ -101,17 +105,20 @@ public class Zweihander
         VillagerProfessionRegistry.POIS.register(modEventBus);
         VillagerProfessionRegistry.PROFESSIONS.register(modEventBus);
         ContractRegistry.CONTRACTS.register(modEventBus);
+        EntityTypeRegistry.ENTITIES.register(modEventBus);
 
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::creativeTabEvent);
         modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::registerLayerDefinitions);
+        modEventBus.addListener(this::creativeTabEvent);
 
         MinecraftForge.EVENT_BUS.register(this);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ZweihanderConfig.COMMON);
     }
 
-    public void commonSetup (final FMLCommonSetupEvent event)
+    private void commonSetup (final FMLCommonSetupEvent event)
     {
         event.enqueueWork(() ->
         {
@@ -120,7 +127,7 @@ public class Zweihander
 
     }
 
-    public void gatherData(GatherDataEvent event)
+    private void gatherData(GatherDataEvent event)
     {
         DataGenerator generator = event.getGenerator();
         PackOutput output = event.getGenerator().getPackOutput();
@@ -134,7 +141,7 @@ public class Zweihander
                 Arrays.stream(PackType.values()).collect(Collectors.toMap(Function.identity(), DetectedVersion.BUILT_IN::getPackVersion)))));
     }
 
-    public void creativeTabEvent(final BuildCreativeModeTabContentsEvent event)
+    private void creativeTabEvent(final BuildCreativeModeTabContentsEvent event)
     {
         for (Item item : ItemRegistry.ITEMS.getEntries().stream().map(RegistryObject::get).toList())
         {
@@ -152,6 +159,14 @@ public class Zweihander
                 event.accept(item);
             }
         }
+    }
+
+    private void clientSetup(final FMLCommonSetupEvent event) {
+        EntityRenderers.register(EntityTypeRegistry.FLAMING_GUILLOTINE.get(), FlamingGuillotineRenderer::new);
+    }
+
+    private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(FlamingGuillotineModel.LAYER_LOCATION, FlamingGuillotineModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -267,11 +282,11 @@ public class Zweihander
             Optional<Registry<DamageType>> registry = level.registryAccess().registry(Registries.DAMAGE_TYPE);
             if (registry.isPresent())
                 try {
-                    return new DamageSource(registry.get().getHolderOrThrow(damageType), trueSource, proxy);
+                    return new DamageSource(registry.get().getHolderOrThrow(damageType), proxy, trueSource);
                 }
                 catch (IllegalStateException stateException)
                 {
-                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypes.GENERIC), trueSource, proxy);
+                    return new DamageSource(registry.get().getHolderOrThrow(DamageTypes.GENERIC), proxy, trueSource);
                 }
             else
                 throw new RuntimeException("Unable to locate damage type registry. How?");
