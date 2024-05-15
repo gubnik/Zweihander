@@ -28,9 +28,11 @@ public class DamageTypeDatagen extends TagsProvider<DamageType> {
     }
 
     public static final ResourceKey<DamageType> MUSKET_SHOT = register("musket_shot");
+    public static final ResourceKey<DamageType> MUSKET_GUILLOTINE = register("musket_guillotine");
 
     public static void generate(BootstapContext<DamageType> bootstrap) {
         bootstrap.register(MUSKET_SHOT, new DamageType(MUSKET_SHOT.location().getPath(), DamageScaling.NEVER, 0.1f));
+        bootstrap.register(MUSKET_GUILLOTINE, new DamageType(MUSKET_SHOT.location().getPath(), DamageScaling.NEVER, 0.1f));
     }
 
     public static TagKey<DamageType> create(String name)
@@ -44,5 +46,7 @@ public class DamageTypeDatagen extends TagsProvider<DamageType> {
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(DamageTypeTags.IS_PROJECTILE)
                 .add(MUSKET_SHOT);
+        tag(DamageTypeTags.IS_FIRE)
+                .add(MUSKET_GUILLOTINE);
     }
 }

@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nikgub.incandescent.Incandescent;
 import xyz.nikgub.incandescent.util.EntityUtils;
 import xyz.nikgub.zweihander.Zweihander;
+import xyz.nikgub.zweihander.ZweihanderConfig;
 import xyz.nikgub.zweihander.client.item_extensions.MusketClientExtension;
 import xyz.nikgub.zweihander.common.registries.EnchantmentRegistry;
 import xyz.nikgub.zweihander.common.registries.ItemRegistry;
@@ -53,10 +54,6 @@ public class MusketItem extends Item {
 
     public static final String AMMO_TAG = "___MUSKET_AMMO"; // string tag
     public static final String SPRINT_TAG = "___MUSKET_SPRINT"; // boolean tag
-
-    public static final float DEFAULT_DAMAGE = 16f;
-    public static final int   DEFAULT_RANGE = 150;
-    public static final float DAMAGE_CAP = 50f;
 
     public MusketItem(Item.Properties properties) {
         super(properties.stacksTo(1));
@@ -152,66 +149,15 @@ public class MusketItem extends Item {
             Map<LivingEntity, Float> toDamage = fireManager(itemStack, entity, ticks);
             for (LivingEntity living : toDamage.keySet())
             {
-                final float damageMultiplier = effect.getModifier(entity, living);
-                final float finalDamage = Mth.clamp(toDamage.get(living), 0, DAMAGE_CAP);
+                final float damageMultiplier = effect.getModifier(itemStack, entity, living);
+                final float finalDamage = Mth.clamp(toDamage.get(living), 0, getMusketDamageCap());
                 living.hurt(Zweihander.Utils.makeDamageSource(DamageTypeDatagen.MUSKET_SHOT, level, entity, entity), finalDamage * damageMultiplier);
                 living.knockback(0.5F * damageMultiplier, Mth.sin(entity.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(entity.getYRot() * ((float) Math.PI / 180F)));
             }
             final long currTick = Incandescent.clientTick;
-            Incandescent.runShakeFor(1, (player -> Incandescent.clientTick > currTick + 15));
+            Incandescent.runShakeFor(2, (player -> Incandescent.clientTick > currTick + 15));
             setLoaded(itemStack, false);
         }
-    }
-
-    private void loadManager (ItemStack itemStack, LivingEntity entity, int ticks)
-    {
-        if (ticks == 0) reload(entity, itemStack);
-    }
-
-    private Map<LivingEntity, Float> fireManager (ItemStack itemStack, LivingEntity entity, int ticks)
-    {
-        Map<LivingEntity, Float> ret = new HashMap<>();
-        if (!(entity.level() instanceof ServerLevel level)) return ret;
-        final int scattershotLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.SCATTERSHOT.get());
-        final int riflingLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get());
-        final float initialDamage = (scattershotLevel != 0) ? 10F : (riflingLevel != 0) ? 12F : DEFAULT_DAMAGE;
-        final int iterations = (scattershotLevel != 0) ? 100 : (riflingLevel != 0) ? 250 : DEFAULT_RANGE;
-        final double x = entity.getX();
-        final double y = entity.getY() + entity.getEyeHeight() + 0.1;
-        final double z = entity.getZ();
-        final Vec3 look = entity.getLookAngle();
-        level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x + look.x / 1.5, y + look.y / 1.5, z + look.z / 1.5, 7, 0.05, 0.02, 0.05, 0.075);
-        level.sendParticles(ParticleTypes.SMOKE, x + look.x / 1.5, y + look.y / 1.5, z + look.z / 1.5, 7, 0.05, 0.02, 0.05, 0.075);
-        Zweihander.Utils.playSound(entity.level(), x, y, z, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Zweihander.MOD_ID, "musket_shot")), SoundSource.PLAYERS, 0.35f, 1);
-        for (int shot = 0; shot < scattershotLevel + 1; shot++)
-        {
-            double i = 1.2;
-            float calculatedDamage = initialDamage;
-            final double inaccuracy = (scattershotLevel != 0) ? Mth.clamp(1 - ((72000 - ticks) / 20f), 0.25f, 1.2f)
-                    : (riflingLevel != 0) ? Mth.clamp(1 - ((72000 - ticks) / 20f), 0.005f, 0.8f)
-                    : Mth.clamp(1 - ((72000 - ticks) / 20f), 0.05f, 1f);
-            final Vec3 spreadModifiers = new Vec3(
-                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 2,
-                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 4,
-                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 2
-            );
-            final Vec3 angles = look.add(spreadModifiers);
-            ClipContext clip; Vec3 lookPos;
-            while (EntityUtils.entityCollector(lookPos = new Vec3(x + angles.x * i, y + angles.y * i, z + angles.z * i), 0.25, entity.level()).isEmpty() &&
-                    !level.getBlockState(new BlockPos(level.clip((clip = new ClipContext(entity.getEyePosition(1f), entity.getEyePosition(1f).add(entity.getViewVector(1f).scale(i)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity))).getBlockPos().getX(), level.clip(clip).getBlockPos().getY(), level.clip(clip).getBlockPos().getZ())
-                    ).canOcclude() && i < iterations)
-            {
-                level.sendParticles((itemStack.isEnchanted()) ? ParticleTypes.ENCHANTED_HIT : ParticleTypes.CRIT, lookPos.x, lookPos.y, lookPos.z, 2, 0.01, 0, 0.01, 0);
-                i += 0.2;
-                if (riflingLevel != 0) calculatedDamage *= (1 + itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get()) * 0.0015f);
-            }
-            for (LivingEntity living : EntityUtils.entityCollector(lookPos, 0.4, level))
-            {
-                final float dealtDamage = calculatedDamage;
-                if (ret.computeIfPresent(living, (livingEntity, f) -> f + dealtDamage) == null) ret.put(living, dealtDamage);
-            }
-        }
-        return ret;
     }
 
     @Override
@@ -259,9 +205,81 @@ public class MusketItem extends Item {
         list.add(Component.literal(first + second).withStyle(ChatFormatting.DARK_GRAY));
     }
 
-
     @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new MusketClientExtension());
+    }
+
+    public static float getMusketDamage(ItemStack itemStack)
+    {
+        final int scattershotLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.SCATTERSHOT.get());
+        final int riflingLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get());
+        final float defaultDamage = ZweihanderConfig.defaultMusketDamage;
+        return defaultDamage * ((scattershotLevel != 0) ? 0.6f : (riflingLevel != 0) ? 0.75f : 1f);
+    }
+
+    public static int getMusketRange(ItemStack itemStack)
+    {
+        final int scattershotLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.SCATTERSHOT.get());
+        final int riflingLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get());
+        final int defaultMusketRange = ZweihanderConfig.defaultMusketRange;
+        return (int)(defaultMusketRange * ((scattershotLevel != 0) ? 0.7f : (riflingLevel != 0) ? 2f : 1f));
+    }
+
+    public static float getMusketDamageCap()
+    {
+        return ZweihanderConfig.musketDamageCap;
+    }
+
+    private void loadManager (ItemStack itemStack, LivingEntity entity, int ticks)
+    {
+        if (ticks == 0) reload(entity, itemStack);
+    }
+
+    private Map<LivingEntity, Float> fireManager (ItemStack itemStack, LivingEntity entity, int ticks)
+    {
+        Map<LivingEntity, Float> ret = new HashMap<>();
+        if (!(entity.level() instanceof ServerLevel level)) return ret;
+        final int scattershotLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.SCATTERSHOT.get());
+        final int riflingLevel = itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get());
+        final float initialDamage = getMusketDamage(itemStack);
+        final int iterations = getMusketRange(itemStack);
+        final double x = entity.getX();
+        final double y = entity.getY() + entity.getEyeHeight() + 0.1;
+        final double z = entity.getZ();
+        final Vec3 look = entity.getLookAngle();
+        level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x + look.x / 1.5, y + look.y / 1.5, z + look.z / 1.5, 7, 0.05, 0.02, 0.05, 0.075);
+        level.sendParticles(ParticleTypes.SMOKE, x + look.x / 1.5, y + look.y / 1.5, z + look.z / 1.5, 7, 0.05, 0.02, 0.05, 0.075);
+        Zweihander.Utils.playSound(entity.level(), x, y, z, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(Zweihander.MOD_ID, "musket_shot")), SoundSource.PLAYERS, 0.35f, 1);
+        for (int shot = 0; shot < scattershotLevel + 1; shot++)
+        {
+            double i = 1.2;
+            float calculatedDamage = initialDamage;
+            final double inaccuracy = (scattershotLevel != 0) ? Mth.clamp(1 - ((72000 - ticks) / 20f), 0.25f, 1.2f)
+                    : (riflingLevel != 0) ? Mth.clamp(1 - ((72000 - ticks) / 20f), 0.005f, 0.8f)
+                    : Mth.clamp(1 - ((72000 - ticks) / 20f), 0.05f, 1f);
+            final Vec3 spreadModifiers = new Vec3(
+                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 2,
+                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 4,
+                    ThreadLocalRandom.current().nextDouble(-inaccuracy, inaccuracy) / 2
+            );
+            final Vec3 angles = look.add(spreadModifiers);
+            ClipContext clip; Vec3 lookPos;
+            while (EntityUtils.entityCollector(lookPos = new Vec3(x + angles.x * i, y + angles.y * i, z + angles.z * i), 0.25, entity.level()).isEmpty() &&
+                    !level.getBlockState(new BlockPos(level.clip((clip = new ClipContext(entity.getEyePosition(1f), entity.getEyePosition(1f).add(entity.getViewVector(1f).scale(i)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity))).getBlockPos().getX(), level.clip(clip).getBlockPos().getY(), level.clip(clip).getBlockPos().getZ())
+                    ).canOcclude() && i < iterations)
+            {
+                level.sendParticles((itemStack.isEnchanted()) ? ParticleTypes.ENCHANTED_HIT : ParticleTypes.CRIT, lookPos.x, lookPos.y, lookPos.z, 2, 0.01, 0, 0.01, 0);
+                i += 0.2;
+                if (riflingLevel != 0) calculatedDamage *= (1 + itemStack.getEnchantmentLevel(EnchantmentRegistry.RIFLING.get()) * 0.0015f);
+            }
+            for (LivingEntity living : EntityUtils.entityCollector(lookPos, 0.4, level))
+            {
+                if (living == entity) continue;
+                final float dealtDamage = calculatedDamage;
+                if (ret.computeIfPresent(living, (livingEntity, f) -> f + dealtDamage) == null) ret.put(living, dealtDamage);
+            }
+        }
+        return ret;
     }
 }

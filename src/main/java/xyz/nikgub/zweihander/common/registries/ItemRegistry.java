@@ -2,7 +2,6 @@ package xyz.nikgub.zweihander.common.registries;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -27,16 +26,16 @@ public class ItemRegistry {
 
     public static final RegistryObject<MusketItem> MUSKET = ITEMS.register("musket", () -> new MusketItem(new Item.Properties()));
 
-    public static final RegistryObject<MusketAmmunitionItem> IRON_MUSKET_BALL = ITEMS.register("iron_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) -> 1f));
+    public static final RegistryObject<MusketAmmunitionItem> IRON_MUSKET_BALL = ITEMS.register("iron_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (itemStack, source, entity) -> 1f));
 
-    public static final RegistryObject<MusketAmmunitionItem> SILVER_MUSKET_BALL = ITEMS.register("silver_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) -> {
+    public static final RegistryObject<MusketAmmunitionItem> SILVER_MUSKET_BALL = ITEMS.register("silver_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (itemStack, source, entity) -> {
         if (entity.getMobType() == MobType.UNDEAD) return 1.2f; else return 0.8f;
     }));
 
-    public static final RegistryObject<MusketAmmunitionItem> INQUISITORIAL_MUSKET_BALL = ITEMS.register("inquisitorial_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (source, entity) ->
+    public static final RegistryObject<MusketAmmunitionItem> INQUISITORIAL_MUSKET_BALL = ITEMS.register("inquisitorial_musket_ball", () -> new MusketAmmunitionItem(new Item.Properties(), (itemStack, source, entity) ->
     {
         if (!(entity.level() instanceof ServerLevel level)) return 0.5f;
-        FlamingGuillotineEntity guillotine = FlamingGuillotineEntity.createWithDamage(EntityTypeRegistry.FLAMING_GUILLOTINE.get(), level, (float) source.getAttributeValue(Attributes.ATTACK_DAMAGE) / 2);
+        FlamingGuillotineEntity guillotine = FlamingGuillotineEntity.createWithDamage(EntityTypeRegistry.FLAMING_GUILLOTINE.get(), level, MusketItem.getMusketDamage(itemStack) * 0.5f, true);
         if (source instanceof Player player) guillotine.setPlayerUuid(player.getUUID());
         guillotine.setSize(entity.getBbWidth() / 0.6f);
         guillotine.moveTo(entity.position());

@@ -1,5 +1,16 @@
 {
+  "item.zweihander.unbound_blood": "Unbound Blood",
+  "item.zweihander.blessed_silver_ingot": "Blessed Silver Ingot",
+  "item.zweihander.incense": "Incense",
+
+  "item.zweihander.accursed_contract": "Accursed Contract",
+
   "item.zweihander.zweihander": "Цвайхандер",
+  "item.zweihander.musket": "Musket",
+
+  "item.zweihander.iron_musket_ball": "Iron Musket Ball",
+  "item.zweihander.silver_musket_ball": "Silver Musket Ball",
+  "item.zweihander.inquisitorial_musket_ball": "Inquisitorial Musket Ball",
 
   "item.zweihander.fiery_infusion": "Пламенная мазь",
   "item.zweihander.ice_infusion": "Ледяная мазь",
@@ -14,6 +25,7 @@
   "tooltip.zweihander.creeper_infusion": "Взрывает врагов",
   "tooltip.zweihander.midas_infusion": "Создает опыт из врагов",
   "tooltip.zweihander.oil_infusion": "Покрывает врагов маслом",
+  "tooltip.zweihander.musket": "Ammo: ",
 
   "effect.zweihander.fiery_infusion": "Пламенная мазь",
   "effect.zweihander.ice_infusion": "Ледяная мазь",
@@ -30,5 +42,19 @@
   "enchantment.zweihander.giant": "Гигантизм",
   "enchantment.zweihander.giant.desc": "Увеличивает размер и дальность",
   "enchantment.zweihander.curse_of_chaos": "Проклятье Хаоса",
-  "enchantment.zweihander.curse_of_chaos.desc": "Увеличивает урон, наносимый игрокам,на 25%, но уменьшает остальной наносимый урон на 50%"
+  "enchantment.zweihander.curse_of_chaos.desc": "Увеличивает урон, наносимый игрокам,на 25%, но уменьшает остальной наносимый урон на 50%",
+  "enchantment.zweihander.trooper": "Trooper",
+  "enchantment.zweihander.trooper.desc": "Melee kills with a musket instantly reload it",
+  "enchantment.zweihander.assault": "Assault",
+  "enchantment.zweihander.assault.desc": "Increases step height and movement speed while sprinting with loaded musket in hand",
+  "enchantment.zweihander.scattershot": "Scattershot",
+  "enchantment.zweihander.scattershot.desc": "Reduces musket's accuracy and damage while making it fire another shot",
+  "enchantment.zweihander.rifling": "Rifling",
+  "enchantment.zweihander.rifling.desc": "Increases musket's range and accuracy, reduces damage. Damage increases with shot's range",
+
+
+  "entity.minecraft.villager.zweihander.demonologist": "Demonologist",
+
+  "zweihander.subtitle.musket_shot": "Musket fired",
+  "zweihander.subtitle.musket_load": "Musket loaded"
 }

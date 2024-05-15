@@ -18,8 +18,10 @@ import java.util.List;
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
 
-    @Inject(method = "renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;Lnet/minecraft/world/item/ItemStack;II)V",
-            at = @At(value = "HEAD"), cancellable = true)
+    @Inject(
+            method = {"renderQuadList"},
+            at = {@At(value = "HEAD")}, cancellable = true
+    )
     public void renderQuadListHead(PoseStack poseStack, VertexConsumer vertexConsumer, List<BakedQuad> bakedQuads, ItemStack itemStack, int p_115167_, int p_115168_, CallbackInfo callbackInfo){
         CompoundTag tag = itemStack.getTag();
         if (tag == null) return;

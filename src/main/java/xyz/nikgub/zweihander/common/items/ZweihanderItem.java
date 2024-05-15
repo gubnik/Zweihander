@@ -57,6 +57,7 @@ public class ZweihanderItem extends Item {
             CompoundTag tag = itemStack.getOrCreateTag();
             if (tag.getBoolean("ProperSwing")) tag.putBoolean("ProperSwing", false);
             return;
+
         }
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.getBoolean("ProperSwing")) return;

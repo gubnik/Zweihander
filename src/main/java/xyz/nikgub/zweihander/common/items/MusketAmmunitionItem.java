@@ -41,6 +41,6 @@ public class MusketAmmunitionItem extends Item {
 
     public interface Effect
     {
-        float getModifier (LivingEntity source, LivingEntity entity);
+        float getModifier (ItemStack musket, LivingEntity source, LivingEntity entity);
     }
 }

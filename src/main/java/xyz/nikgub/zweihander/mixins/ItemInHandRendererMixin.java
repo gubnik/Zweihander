@@ -24,12 +24,15 @@ import xyz.nikgub.zweihander.common.registries.EnchantmentRegistry;
 @SuppressWarnings("unused")
 @Mixin(ItemInHandRenderer.class)
 public class ItemInHandRendererMixin {
+
     @Final
     @Shadow
     private ItemRenderer itemRenderer;
 
-    @Inject(method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(value = "HEAD"))
+    @Inject(
+            method = {"renderItem"},
+            at = {@At("HEAD")}
+    )
     public void renderItemHead(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext displayContext, boolean b, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo callbackInfo)
     {
         if (itemStack.isEmpty()) return;
@@ -40,8 +43,10 @@ public class ItemInHandRendererMixin {
         }
     }
 
-    @Inject(method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(value = "TAIL"))
+    @Inject(
+            method = {"renderItem"},
+            at = {@At("TAIL")}
+    )
     public void renderItemTail(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext displayContext, boolean b, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo callbackInfo)
     {
         if (itemStack.isEmpty()) return;

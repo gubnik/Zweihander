@@ -31,6 +31,7 @@ public class AccursedContractItem extends Item {
             ContractDirector director = new ContractDirector(level1);
             director.run(player);
         }
+        itemStack.shrink(1);
         return itemStack;
     }
 
@@ -49,7 +50,7 @@ public class AccursedContractItem extends Item {
     @Override
     public int getUseDuration(@NotNull ItemStack itemStack)
     {
-        return 72000;
+        return 40;
     }
 
     @Override

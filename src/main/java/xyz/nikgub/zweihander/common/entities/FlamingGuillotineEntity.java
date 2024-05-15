@@ -7,14 +7,17 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import xyz.nikgub.incandescent.Incandescent;
 import xyz.nikgub.incandescent.util.EntityUtils;
 import xyz.nikgub.zweihander.Zweihander;
 import xyz.nikgub.zweihander.data.DamageTypeDatagen;
 
 public class FlamingGuillotineEntity extends AttackEffectEntity {
     public AnimationState fallAnimationState = new AnimationState();
-    public float damage = 5;
+    private float damage = 5;
+    private boolean isDirect = false;
 
     public FlamingGuillotineEntity(EntityType<? extends FlamingGuillotineEntity> entityType, Level level) {
         super(entityType, level);
@@ -22,10 +25,11 @@ public class FlamingGuillotineEntity extends AttackEffectEntity {
         this.fallAnimationState.start(0);
     }
 
-    public static FlamingGuillotineEntity createWithDamage (EntityType<? extends FlamingGuillotineEntity> entityType, Level level, float damage)
+    public static FlamingGuillotineEntity createWithDamage (EntityType<? extends FlamingGuillotineEntity> entityType, Level level, float damage, boolean isDirect)
     {
         FlamingGuillotineEntity entity = new FlamingGuillotineEntity(entityType, level);
         entity.damage = damage;
+        entity.isDirect = isDirect;
         return entity;
     }
 
@@ -40,8 +44,14 @@ public class FlamingGuillotineEntity extends AttackEffectEntity {
                 Entity owner = (this.getPlayerUuid() != null) ? this.level().getPlayerByUUID(this.getPlayerUuid()) : this;
                 for(LivingEntity entity : EntityUtils.entityCollector(this.position(), 3 * Mth.sqrt(this.getSize()), this.level()))
                 {
-                    entity.hurt(Zweihander.Utils.makeDamageSource(DamageTypeDatagen.MUSKET_SHOT, serverLevel, owner, this),
+                    entity.hurt(Zweihander.Utils.makeDamageSource(DamageTypeDatagen.MUSKET_GUILLOTINE, serverLevel, owner, isDirect ? owner : this),
                             damage * this.getSize());
+                }
+
+                if (owner instanceof Player player)
+                {
+                    final int tick = player.tickCount;
+                    Incandescent.runShakeFor(1, (localPlayer -> tick + 10 < localPlayer.tickCount));
                 }
             }
         }

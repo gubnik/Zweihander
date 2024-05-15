@@ -217,8 +217,11 @@ public class Zweihander
     //@SuppressWarnings("unused")
     public void livingHurtEvent (final LivingHurtEvent event)
     {
+
         LivingEntity target = event.getEntity();
         DamageSource damageSource = event.getSource();
+        Zweihander.LOGGER.info("True : " + damageSource.getEntity());
+        Zweihander.LOGGER.info("Direct : " + damageSource.getDirectEntity());
         OiledMobEffect.tryIgnition(event);
         if (!(damageSource.getDirectEntity() instanceof LivingEntity source)) return;
         ItemStack mainHandItem = source.getMainHandItem();
@@ -241,7 +244,7 @@ public class Zweihander
         DamageSource damageSource = event.getSource();
         ItemStack hand;
         if (damageSource.getEntity() instanceof LivingEntity entity && (hand = entity.getMainHandItem()).getItem() instanceof MusketItem && !MusketItem.isLoaded(hand)
-                && hand.getEnchantmentLevel(EnchantmentRegistry.TROOPER.get()) != 0)
+                && hand.getEnchantmentLevel(EnchantmentRegistry.TROOPER.get()) != 0 && Zweihander.Utils.isDirectDamage(damageSource))
         {
             MusketItem.reload(entity, hand);
         }
