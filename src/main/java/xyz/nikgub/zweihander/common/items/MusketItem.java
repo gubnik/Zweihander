@@ -35,7 +35,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nikgub.incandescent.Incandescent;
-import xyz.nikgub.incandescent.util.EntityUtils;
+import xyz.nikgub.incandescent.common.util.EntityUtils;
 import xyz.nikgub.zweihander.Zweihander;
 import xyz.nikgub.zweihander.ZweihanderConfig;
 import xyz.nikgub.zweihander.client.item_extensions.MusketClientExtension;

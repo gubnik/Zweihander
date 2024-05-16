@@ -10,7 +10,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import xyz.nikgub.incandescent.Incandescent;
-import xyz.nikgub.incandescent.util.EntityUtils;
+import xyz.nikgub.incandescent.common.entity.AttackEffectEntity;
+import xyz.nikgub.incandescent.common.util.EntityUtils;
 import xyz.nikgub.zweihander.Zweihander;
 import xyz.nikgub.zweihander.data.DamageTypeDatagen;
 

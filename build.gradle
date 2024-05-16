@@ -16,7 +16,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: "parchment", version: "2023.09.03-1.20.1"
+    mappings channel: mappings_channel, version: mappings_version
     copyIdeResources = true
     runs {
         configureEach {
@@ -81,7 +81,7 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf("curse.maven:incandescent_lib-971520:5220452")
+    implementation fg.deobf("curse.maven:incandescent_lib-971520:5349539")
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -91,6 +91,8 @@ tasks.named('processResources', ProcessResources).configure {
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
+            mappings_channel: mappings_channel, mappings_version: mappings_version,
+            incandescent_lib_range: incandescent_lib_range
     ]
     inputs.properties replaceProperties
 
@@ -133,9 +135,3 @@ reobf {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
-
-//sourceSets.each {
-//    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-//    it.output.resourcesDir = dir
-//    it.java.destinationDirectory = dir
-//}

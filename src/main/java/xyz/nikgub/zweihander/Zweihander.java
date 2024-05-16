@@ -145,19 +145,9 @@ public class Zweihander
     {
         for (Item item : ItemRegistry.ITEMS.getEntries().stream().map(RegistryObject::get).toList())
         {
-            if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-                if (item instanceof InfusionItem) event.accept(item);
-                if (item instanceof ZweihanderItem) event.accept(item);
-                if (item instanceof MusketItem) event.accept(item);
-            }
-            else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
-            {
-                if (item instanceof InfusionItem) event.accept(item);
-            }
-            else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
-            {
-                event.accept(item);
-            }
+            if (item instanceof ZweihanderItem || item instanceof MusketItem) {if (event.getTabKey() == CreativeModeTabs.COMBAT) event.accept(item);}
+            else if (item instanceof InfusionItem) {if (event.getTabKey() == CreativeModeTabs.COMBAT || event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) event.accept(item);}
+            else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) event.accept(item);
         }
     }
 
@@ -220,8 +210,6 @@ public class Zweihander
 
         LivingEntity target = event.getEntity();
         DamageSource damageSource = event.getSource();
-        Zweihander.LOGGER.info("True : " + damageSource.getEntity());
-        Zweihander.LOGGER.info("Direct : " + damageSource.getDirectEntity());
         OiledMobEffect.tryIgnition(event);
         if (!(damageSource.getDirectEntity() instanceof LivingEntity source)) return;
         ItemStack mainHandItem = source.getMainHandItem();

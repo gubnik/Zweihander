@@ -28,7 +28,7 @@ public class ZweihanderItem extends Item {
 
     private static final UUID REACH_UUID                = UUID.fromString("ba808878-e417-4af3-9987-630bbcbd120f");
     private static final UUID TOUGHNESS_UUID            = UUID.fromString("ee28a837-0676-47a1-9e2a-8de73c49eb8c");
-    private static final UUID KNCOKBACK_RESISTANCE_UUID = UUID.fromString("a11982cc-39c5-4b6f-8bff-303a7c75deda");
+    private static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("a11982cc-39c5-4b6f-8bff-303a7c75deda");
 
     public static final Set<ToolAction> ACTIONS = Set.of(ToolActions.SWORD_SWEEP);
 
@@ -95,7 +95,7 @@ public class ZweihanderItem extends Item {
             if (itemStack.getOrCreateTag().getBoolean("ProperSwing"))
             {
                 builder.put(Attributes.KNOCKBACK_RESISTANCE,
-                        new AttributeModifier(KNCOKBACK_RESISTANCE_UUID, "Weapon modifier", 0.6 + itemStack.getEnchantmentLevel(EnchantmentRegistry.POISE.get()) * 0.1, AttributeModifier.Operation.ADDITION));
+                        new AttributeModifier(KNOCKBACK_RESISTANCE_UUID, "Weapon modifier", 0.6 + itemStack.getEnchantmentLevel(EnchantmentRegistry.POISE.get()) * 0.1, AttributeModifier.Operation.ADDITION));
                 builder.put(Attributes.ARMOR_TOUGHNESS,
                         new AttributeModifier(TOUGHNESS_UUID, "Weapon modifier", (1 + itemStack.getEnchantmentLevel(EnchantmentRegistry.POISE.get())) * 5, AttributeModifier.Operation.ADDITION));
             }
