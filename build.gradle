@@ -17,6 +17,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     copyIdeResources = true
     runs {
         configureEach {
@@ -81,7 +82,7 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf("curse.maven:incandescent_lib-971520:5349539")
+    implementation fg.deobf("curse.maven:incandescent_lib-971520:5500207")
 }
 
 tasks.named('processResources', ProcessResources).configure {
