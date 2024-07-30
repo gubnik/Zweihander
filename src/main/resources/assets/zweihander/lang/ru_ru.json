@@ -12,6 +12,9 @@
   "item.zweihander.silver_musket_ball": "Silver Musket Ball",
   "item.zweihander.inquisitorial_musket_ball": "Inquisitorial Musket Ball",
 
+  "item.zweihander.tales_of_void": "Tales of Void",
+  "item.zweihander.abyssal_anchor": "Abyssal Anchor",
+
   "item.zweihander.fiery_infusion": "Пламенная мазь",
   "item.zweihander.ice_infusion": "Ледяная мазь",
   "item.zweihander.silver_infusion": "Серебряная мазь",
@@ -35,6 +38,7 @@
   "effect.zweihander.oil_infusion": "Масляная мазь",
 
   "enchantment.zweihander.repulsion": "Отталкивание",
+  "enchantment.zweihander.repulsion.desc": "Blocking with a shield knocks enemies back",
   "enchantment.zweihander.weight": "Тяжесть",
   "enchantment.zweihander.weight.desc": "Увеличивает отдачу в зависимости от скорости",
   "enchantment.zweihander.poise": "Баланс",
@@ -51,6 +55,21 @@
   "enchantment.zweihander.scattershot.desc": "Reduces musket's accuracy and damage while making it fire another shot",
   "enchantment.zweihander.rifling": "Rifling",
   "enchantment.zweihander.rifling.desc": "Increases musket's range and accuracy, reduces damage. Damage increases with shot's range",
+
+  "enchantment.zweihander.coalescence": "Coalescence",
+  "enchantment.zweihander.coalescence.desc": "Tales of Void calls upon a rain of powerful slowness",
+  "enchantment.zweihander.wake_of_poseidon": "Wake of Poseidon",
+  "enchantment.zweihander.wake_of_poseidon.desc": "Tales of Void conjures a vortex upon its user that brings in enemies",
+  "enchantment.zweihander.mariners_rime": "Mariner's Rime",
+  "enchantment.zweihander.mariners_rime.desc": "Tales of Void turns its user into a void potential to dash forth",
+
+  "enchantment.zweihander.northern_fleet": "Northern Fleet",
+  "enchantment.zweihander.northern_fleet.desc": "Abyssal Anchor's critical strikes share the damage across nearby enemies and apply cold to them",
+  "enchantment.zweihander.crushing_depths": "Crushing Depths",
+  "enchantment.zweihander.crushing_depths.desc": "Abyssal Anchor grows in power with consecutive strikes, critical strikes release the accumulated power",
+  "enchantment.zweihander.devils_roar": "Devil's Roar",
+  "enchantment.zweihander.devils_roar.desc": "Abyssal Anchor's critical strikes create geysers that launch enemies",
+
 
 
   "entity.minecraft.villager.zweihander.demonologist": "Demonologist",
